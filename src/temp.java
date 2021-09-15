@@ -2,8 +2,6 @@
 
 import java.io.*;
 import java.lang.String;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -102,9 +100,11 @@ public class temp {
 
     //sort and print most 200 frequency word the HashMap
     public static HashMap<String, Integer> sortMap(HashMap<String, Integer> rawData){
-        int count = 0;
 
-        HashMap<String, Integer> sortedMap = rawData.entrySet().stream()
+
+        //sortedMap.entrySet().forEach((e) -> {System.out.println(e.getKey()+ " " +e.getValue()); });
+
+        return rawData.entrySet().stream()
                 .sorted(Comparator.comparingInt(e -> -e.getValue()))
                 //.limit(250)
                 .collect(Collectors.toMap(
@@ -113,11 +113,6 @@ public class temp {
                         (a, b) -> { throw new AssertionError(); },
                         LinkedHashMap::new
                 ));
-
-
-        //sortedMap.entrySet().forEach((e) -> {System.out.println(e.getKey()+ " " +e.getValue()); });
-
-        return sortedMap;
     }
 
     //stemming the word for Part A 1b
