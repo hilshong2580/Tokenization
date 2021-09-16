@@ -1,93 +1,77 @@
-
-/*
-*
-*Done:  -Consider abbreviations such as "U.S.A." as one term: "USA" --
-*       there are equivalents in *input-part-A.txt,* below. An abbreviation may be mixed case.
-*       考慮使用縮寫詞，例如“U.S.A.” 作為一個術語：“美國”——在下面的 input-part-A.txt 中有等價物。 縮寫可能是混合情況。
-*
-*
-* */
-
-
-
 import java.io.*;
 import java.lang.String;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class Tokenization {
-
     public static void main(String[] args) throws Exception {
-        System.out.println(" ");
+
+        //read the stopWord.txt and save it into a list
+        List<String> stopList = new ArrayList<>();
+        readTextFile(stopList, "stopwords.txt");
+
+        //read the part A txt file
+        List<String> readPartALines = new ArrayList<>();
+        readTextFile(readPartALines, "tokenization-input-part-A.txt");
+
+        readPartALines.clear();
+        wordAbbreviations(readPartALines, readPartALines);
+
+        splitAndStopWord(readPartALines);
+
         /*
-        File file = new File ("C:\\Users\\tommy\\Desktop\\446\\Project 1\\stopwords.txt");
-        BufferedReader buf = new BufferedReader(new FileReader(file));
-        String str;
-        while((str = buf.readLine()) != null)
-        System.out.println(str);
-
-        FileReader file = new FileReader("C:\\Users\\tommy\\Desktop\\446\\Project 1\\tokenization-input-part-A.txt");
-        int i;
-        while((i= file.read()) != -1){
-            if((char) i == '.')
-                i++;
-            else if((char) i == ','){
-                int temp = i;
-                if()
-
-            }
-            else
-                System.out.print((char) i);
-        }
+        for(String xx: stopList)
+            System.out.println(xx);
+        */
 
 
 
-        FileReader file = new FileReader("C:\\Users\\tommy\\Desktop\\446\\Project 1\\tokenization-input-part-A.txt");
-        BufferedReader buf = new BufferedReader(file);
-        String line;
-        while((line = buf.readLine()) != null){
-            String[] words = line.split("[ :/,]");
-            for(String x : words){
-                System.out.print(x+" ");
-            }
-        }
-
-        File file = new File ("C:\\\\Users\\\\tommy\\\\Desktop\\\\446\\\\Project 1\\\\tokenization-input-part-A.txt");
-        BufferedReader buf = new BufferedReader(new FileReader(file));
-        String str;
-        while((str = buf.readLine()) != null){
-            char[] ch = str.toCharArray();
-        }
-                    System.out.println(" ");
-                    j = file.read();
-                    System.out.println("(char) i = " +((char) i)+" and j = "+((char) j));
-                    System.out.println(" ");
-        * */
-
-        FileReader file = new FileReader("C:\\Users\\tommy\\Desktop\\446\\Project 1\\tokenization-input-part-A.txt");
-        int i;
-        int j = 'a';
-        while((i= file.read()) != -1){
-
-            if((char) i == '.') {
-                i++;
-            }
-            else if ((char) i == '\n'){
-                System.out.println(" ");
-            }
-            else if(!Character.isLetter((char) i)){
-                if((char) j != ' '){
-                    System.out.print(" ");
-                    j = ' ';
-                }
-            }
-            else{
-                System.out.print(Character.toLowerCase((char) i));
-                j = i;
-            }
-
-        }
-
-
-        //System.out.println("n");
-        System.out.println(" ");
     }
+
+
+    public static void splitAndStopWord(List<String> notSpilt){
+        for(String str: notSpilt){
+            String[] wordTemp = str.split(" ");
+        }
+
+
+    }
+
+    //Consider abbreviations such as "U.S.A." as one term: "USA" --
+    //remove all the punctuation
+    public static void wordAbbreviations(List<String> haveDot, List<String> notDot){
+        for(String rawLine:haveDot){
+            String tempE = rawLine;
+            Matcher matchStringD = Pattern.compile("\\b(?:[a-zA-Z]\\.){2,}").matcher(rawLine);
+            while (matchStringD.find()){
+                String str = tempE.replaceAll(matchStringD.group(), matchStringD.group().replace(".", ""));
+                str = str.replaceAll("\\p{Punct}", " ");
+                str = str.replaceAll("‘", " ");
+                str = str.replaceAll("\\s+"," ").trim();
+                String[] wordTemp = str.split(" ");
+                for(String temp: wordTemp)
+                    notDot.add(temp);
+            }
+        }
+    }
+
+    //read the file and conveert to lower case
+    public static void readTextFile(List<String> readByLines, String path){
+        try (Stream<String> lines = Files.lines(Paths.get(path))) {
+            lines.forEach((e) -> readByLines.add(e.toLowerCase()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
+
 }
